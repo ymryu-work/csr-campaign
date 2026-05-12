@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프프옷장 클리닝 데이 — F&F CSR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#111;min-height:100vh;display:grid;place-items:center;font-family:'DM Sans',sans-serif;overflow:hidden}
+.stage{position:relative;width:min(100vw,177.78vh);height:min(56.25vw,100vh);overflow:hidden;background:#F9FAFB}
+.slide{position:absolute;inset:0;display:none;flex-direction:column}
+.slide.active{display:flex;animation:fin .28s ease}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+:root{--g:#05B169;--gl:#E6F6EF;--gd:#038050;--r:#DF2935;--rl:#FDECEE;--w:#F0AD4E;--dark:#050F1A;--bg:#F9FAFB;--sur:#FFFFFF;--tp:#050F1A;--ts:#5B616E;--neu:#8A919E;--bd:#D1D5DB}
+.dp{font-size:clamp(19px,3.25vw,63px);font-weight:700;line-height:1.15;letter-spacing:-.02em}
+.h1{font-size:clamp(16px,2.15vw,41px);font-weight:700;line-height:1.2}
+.h2{font-size:clamp(14px,1.6vw,31px);font-weight:700;line-height:1.25}
+.h3{font-size:clamp(12px,1.15vw,22px);font-weight:700;line-height:1.3}
+.bd{font-size:clamp(11px,.9vw,17px);font-weight:400;line-height:1.6}
+.sm{font-size:clamp(10px,.77vw,15px);font-weight:400;line-height:1.5}
+.cap{font-size:clamp(9px,.65vw,12.5px);font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+.mono{font-family:'JetBrains Mono',monospace}
+.si{flex:1;padding:3% 4.5%;display:flex;flex-direction:column;overflow:hidden}
+.shdr{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--bd);padding-bottom:.7vw;margin-bottom:1vw}
+.shdr .lbl{font-size:.63vw;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:.3vw}
+.shdr .num{font-size:.6vw;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--neu);font-family:'JetBrains Mono',monospace}
+.dark{background:linear-gradient(135deg,#050F1A 0%,#071B2E 65%,#041509 100%);color:#fff}
+.card{background:var(--sur);border:1px solid var(--bd);border-radius:.65vw;padding:1.1vw 1.3vw}
+.cgt{border-top:2.5px solid var(--g)}
+.chip{display:inline-flex;align-items:center;padding:.12vw .5vw;border-radius:.28vw;font-size:.65vw;font-weight:600;white-space:nowrap}
+.cg{background:var(--gl);color:var(--g)}
+.cr{background:var(--rl);color:var(--r)}
+.cn{background:#F3F4F6;color:var(--ts)}
+.cw{background:#FFF3D4;color:#8A5E00}
+.bul{list-style:none;display:flex;flex-direction:column;gap:.32vw}
+.bul li{display:flex;align-items:flex-start;gap:.4vw;font-size:.85vw;line-height:1.45;color:var(--tp)}
+.bul li::before{content:'';width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw}
+.bul.sm li{font-size:.75vw}
+.bul.xs li{font-size:.69vw}
+.bul.rd li::before{background:var(--r)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{background:#F3F4F6;padding:.45vw .75vw;text-align:left;font-size:.63vw;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ts);border-bottom:1px solid var(--bd)}
+.tbl td{padding:.55vw .75vw;font-size:.68vw;border-bottom:1px solid var(--bd);color:var(--tp);line-height:1.4}
+.tbl tr:last-child td{border-bottom:none}
+.sb{width:1.35vw;height:1.35vw;border-radius:50%;background:var(--g);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.67vw;font-weight:700;flex-shrink:0}
+.fa{display:flex;align-items:center;justify-content:center;color:var(--g);font-size:1.15vw;flex-shrink:0;padding:0 .25vw}
+.wb{border-left:3px solid var(--w);background:#FFFBF0;padding:.65vw .9vw;border-radius:0 .4vw .4vw 0}
+.s1{background:linear-gradient(135deg,#050F1A 0%,#071B2E 65%,#041509 100%)}
+.s1-glow{position:absolute;top:-25%;right:-12%;width:65%;height:150%;background:radial-gradient(ellipse,rgba(5,177,105,.1) 0%,transparent 65%);pointer-events:none}
+.s1-glow2{position:absolute;bottom:-20%;left:-5%;width:50%;height:100%;background:radial-gradient(ellipse,rgba(5,177,105,.05) 0%,transparent 65%);pointer-events:none}
+.s1-line{position:absolute;left:0;top:12%;width:3px;height:76%;background:linear-gradient(to bottom,transparent,var(--g) 25%,var(--g) 75%,transparent)}
+.s1-logo{position:absolute;top:4.5%;right:4.5%;font-size:1.05vw;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.12em}
+.s1-body{position:absolute;left:8%;top:50%;transform:translateY(-50%)}
+.s13-glow{position:absolute;bottom:-30%;left:-12%;width:65%;height:150%;background:radial-gradient(ellipse,rgba(5,177,105,.07) 0%,transparent 65%);pointer-events:none}
+.s13-line{position:absolute;right:0;top:12%;width:2px;height:76%;background:linear-gradient(to bottom,transparent,var(--g) 25%,var(--g) 75%,transparent)}
+.ov-card{background:#fff;border:1.5px solid var(--g);border-radius:.8vw;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
+.nav{position:absolute;bottom:0;left:0;right:0;height:4.2%;display:flex;align-items:center;justify-content:center;gap:.38vw;z-index:999;background:linear-gradient(to top,rgba(0,0,0,.18),transparent)}
+.nd{width:.42vw;height:.42vw;border-radius:50%;background:rgba(200,200,200,.45);border:none;cursor:pointer;transition:all .22s}
+.nd.on{background:var(--g);width:1.1vw;border-radius:.2vw}
+.nc{position:absolute;left:2%;bottom:.4%;font-size:.6vw;color:rgba(200,200,200,.55);font-family:'JetBrains Mono',monospace}
+.na{position:absolute;right:2%;bottom:.25%;display:flex;gap:.28vw}
+.nb{width:1.7vw;height:1.7vw;border-radius:50%;border:1px solid rgba(200,200,200,.3);background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.7vw;transition:background .18s}
+.nb:hover{background:rgba(255,255,255,.3)}
+.sec-lbl{display:flex;align-items:center;gap:.45vw;margin-bottom:.5vw;flex-shrink:0}
+.sec-num{width:1.45vw;height:1.45vw;background:var(--g);border-radius:50%;color:#fff;font-size:.66vw;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-txt{font-size:.82vw;font-weight:700;color:var(--tp)}
+.sec-cap{font-size:.63vw;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ts);margin-bottom:.38vw}
+</style>
+</head>
+<body>
+<div class="stage">
+
+<!-- ══════════════════════════════════════════
+     SLIDE 1 — COVER
+══════════════════════════════════════════ -->
+<div class="slide active s1">
+  <div class="s1-glow"></div><div class="s1-glow2"></div><div class="s1-line"></div>
+  <div class="s1-logo">F&amp;F</div>
+  <div class="s1-body">
+    <div style="margin-bottom:.8vw"><span class="chip cg" style="font-size:.78vw">사내 의류수거 CSR 캠페인</span></div>
+    <div class="dp" style="color:#fff;margin-bottom:1.4vw;white-space:nowrap;font-size:3.4vw">옷장은 비우고, 마음은 채우고!</div>
+    <div style="display:inline-block;margin-bottom:.7vw">
+      <span style="font-size:clamp(18px,2.15vw,40px);font-weight:700;color:var(--g);letter-spacing:-.01em;text-shadow:0 0 2vw rgba(5,177,105,.4)">프프옷장 클리닝 데이</span>
+    </div>
+    <div class="bd" style="color:rgba(255,255,255,.4);font-size:1.05vw">사내 의류수거 CSR 캠페인 실행계획(안)</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 2 — 프프옷장 클리닝 데이 캠페인 개요
+══════════════════════════════════════════ -->
+<div class="slide">
+  <div class="si">
+    <div class="shdr">
+      <div><div class="lbl">Campaign Overview</div><div class="h1">프프옷장 클리닝 데이 캠페인 개요</div></div>
+      <div class="num">02 / 07</div>
+    </div>
+    <div class="ov-card">
+      <!-- ROW 1: 진행목적(좌) + 운영개요 2×2(우) -->
+      <div style="display:flex;flex:1.5;min-height:0;border-bottom:1px solid var(--bd)">
+        <div style="flex:0 0 43%;padding:.85vw 1.2vw;border-right:1px solid var(--bd);display:flex;flex-direction:column">
+          <div class="sec-lbl"><div class="sec-num">1</div><div class="sec-txt">진행 목적</div></div>
+          <ul class="bul xs" style="gap:.48vw">
+            <li>사내 참여형 CSR 활동을 통해 임직원의 <strong>ESG 인식 제고</strong></li>
+            <li>의류 수거 → 업사이클링 → 기부로 이어지는 <strong>자원순환 구조 구축</strong></li>
+            <li>기업의 <strong>지속가능경영 방향성</strong>과 연계된 긍정적 조직문화 조성</li>
+          </ul>
+        </div>
+        <div style="flex:1;padding:.85vw 1vw;display:flex;flex-direction:column">
+          <div class="sec-lbl"><div class="sec-num">2</div><div class="sec-txt">운영 개요</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6vw;flex:1;min-height:0">
+            <div style="border:1px solid var(--bd);border-radius:.45vw;padding:.6vw .85vw;display:flex;align-items:center;gap:.65vw">
+              <div style="width:2.3vw;height:2.3vw;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2vw;flex-shrink:0">👥</div>
+              <div>
+                <div class="cap" style="color:var(--g);margin-bottom:.18vw">참여 대상</div>
+                <div style="font-size:.78vw;font-weight:700;color:var(--tp)">F&amp;F 전 임직원</div>
+                <div style="font-size:.62vw;color:var(--ts)">(F&amp;F 본사 및 계열사 임직원)</div>
+              </div>
+            </div>
+            <div style="border:1px solid var(--bd);border-radius:.45vw;padding:.6vw .85vw;display:flex;align-items:center;gap:.65vw">
+              <div style="width:2.3vw;height:2.3vw;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2vw;flex-shrink:0">👕</div>
+              <div>
+                <div class="cap" style="color:var(--g);margin-bottom:.18vw">수거 대상</div>
+                <div style="font-size:.78vw;font-weight:700;color:var(--tp)">임직원이 보유한</div>
+                <div style="font-size:.72vw;font-weight:600;color:var(--tp)">미사용 또는 사용 가능 의류</div>
+              </div>
+            </div>
+            <div style="border:1px solid var(--bd);border-radius:.45vw;padding:.6vw .85vw;display:flex;align-items:center;gap:.65vw">
+              <div style="width:2.3vw;height:2.3vw;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2vw;flex-shrink:0">📅</div>
+              <div>
+                <div class="cap" style="color:var(--g);margin-bottom:.18vw">진행 시기</div>
+                <div class="mono" style="font-size:.88vw;font-weight:700;color:var(--g)">연 2회</div>
+                <div style="font-size:.62vw;color:var(--ts)">SS 시즌 종료 후 / FW 시즌 종료 후</div>
+              </div>
+            </div>
+            <div style="border:1px solid var(--bd);border-radius:.45vw;padding:.6vw .85vw;display:flex;align-items:center;gap:.65vw">
+              <div style="width:2.3vw;height:2.3vw;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2vw;flex-shrink:0">📍</div>
+              <div>
+                <div class="cap" style="color:var(--g);margin-bottom:.18vw">진행 장소(논의예정)</div>
+                <div style="font-size:.72vw;color:var(--tp)"><span class="chip cn" style="font-size:.52vw;margin-right:.22vw">1안</span>3층 라운지</div>
+                <div style="font-size:.72vw;color:var(--tp);margin-top:.15vw"><span class="chip cn" style="font-size:.52vw;margin-right:.22vw">2안</span>택배실 인근 주차장</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ROW 2: 프로젝트 흐름 -->
+      <div style="flex:1;border-bottom:1px solid var(--bd);padding:.75vw 1.2vw;display:flex;flex-direction:column;min-height:0">
+        <div class="sec-lbl"><div class="sec-num">3</div><div class="sec-txt">프로젝트 흐름</div></div>
+        <div style="display:flex;align-items:stretch;gap:.5vw;flex:1;min-height:0">
+          <div style="flex:1;border:1.5px solid var(--g);border-radius:.5vw;padding:.55vw .7vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.28vw;background:var(--gl)">
+            <div style="font-size:1.52vw;line-height:1">👗</div>
+            <div class="mono" style="font-size:.6vw;font-weight:700;color:var(--g)">01</div>
+            <div style="font-size:.75vw;font-weight:700;color:var(--gd)">의류 수거</div>
+            <div style="font-size:.6vw;color:var(--gd)">임직원 자발적 기부</div>
+          </div>
+          <div style="display:flex;align-items:center;color:var(--g);font-size:.95vw;flex-shrink:0">→</div>
+          <div style="flex:1;border:1px solid var(--bd);border-radius:.5vw;padding:.55vw .7vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.28vw">
+            <div style="font-size:1.52vw;line-height:1">♻️</div>
+            <div class="mono" style="font-size:.6vw;font-weight:700;color:var(--g)">02</div>
+            <div style="font-size:.75vw;font-weight:700;color:var(--tp)">업사이클링</div>
+            <div style="font-size:.6vw;color:var(--ts)">소재별 분류 · 재가공</div>
+          </div>
+          <div style="display:flex;align-items:center;color:var(--g);font-size:.95vw;flex-shrink:0">→</div>
+          <div style="flex:1;border:1px solid var(--bd);border-radius:.5vw;padding:.55vw .7vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.28vw">
+            <div style="font-size:1.52vw;line-height:1">🪑</div>
+            <div class="mono" style="font-size:.6vw;font-weight:700;color:var(--g)">03</div>
+            <div style="font-size:.75vw;font-weight:700;color:var(--tp)">가구 제작</div>
+            <div style="font-size:.6vw;color:var(--ts)">업사이클링 소재로 제작</div>
+          </div>
+          <div style="display:flex;align-items:center;color:var(--g);font-size:.95vw;flex-shrink:0">→</div>
+          <div style="flex:1;border:1px solid var(--bd);border-radius:.5vw;padding:.55vw .7vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.28vw">
+            <div style="font-size:1.52vw;line-height:1">🤲</div>
+            <div class="mono" style="font-size:.6vw;font-weight:700;color:var(--g)">04</div>
+            <div style="font-size:.75vw;font-weight:700;color:var(--tp)">기부</div>
+            <div style="font-size:.6vw;color:var(--ts)">기관/단체에 가구 기부</div>
+          </div>
+          <div style="display:flex;align-items:center;color:var(--g);font-size:.95vw;flex-shrink:0">→</div>
+          <div style="flex:1;border:1.5px solid var(--g);border-radius:.5vw;padding:.55vw .7vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.28vw;background:var(--gl)">
+            <div style="font-size:1.52vw;line-height:1">🌍</div>
+            <div class="mono" style="font-size:.6vw;font-weight:700;color:var(--g)">05</div>
+            <div style="font-size:.75vw;font-weight:700;color:var(--gd)">자원순환 실현</div>
+            <div style="font-size:.6vw;color:var(--gd)">환경보호 · 지속가능 미래</div>
+          </div>
+        </div>
+      </div>
+      <!-- ROW 3: 기대효과 + Next Step -->
+      <div style="display:flex;flex:1.1;min-height:0">
+        <div style="flex:1;padding:.75vw 1.2vw;border-right:1px solid var(--bd);display:flex;flex-direction:column;min-height:0">
+          <div class="sec-lbl"><div class="sec-num">4</div><div class="sec-txt">기대 효과</div></div>
+          <div style="display:flex;gap:.55vw;flex:1;align-items:stretch;min-height:0">
+            <div style="flex:1;background:var(--bg);border-radius:.42vw;padding:.5vw .65vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.28vw">
+              <div style="font-size:1.36vw">👥</div>
+              <div style="font-size:.65vw;color:var(--tp);line-height:1.4">임직원 참여 기반의<br><strong>ESG 실천 문화</strong> 확산</div>
+            </div>
+            <div style="flex:1;background:var(--bg);border-radius:.42vw;padding:.5vw .65vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.28vw">
+              <div style="font-size:1.36vw">♻️</div>
+              <div style="font-size:.65vw;color:var(--tp);line-height:1.4">의류 재사용을 통한<br><strong>자원순환 및 환경 보호</strong> 기여</div>
+            </div>
+            <div style="flex:1;background:var(--bg);border-radius:.42vw;padding:.5vw .65vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.28vw">
+              <div style="font-size:1.36vw">💚</div>
+              <div style="font-size:.65vw;color:var(--tp);line-height:1.4">기부를 통한<br><strong>사회적 가치 창출</strong> 및 이미지 제고</div>
+            </div>
+            <div style="flex:1;background:var(--bg);border-radius:.42vw;padding:.5vw .65vw;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.28vw">
+              <div style="font-size:1.36vw">💬</div>
+              <div style="font-size:.65vw;color:var(--tp);line-height:1.4">사내 커뮤니케이션 활성화 및<br><strong>참여형 캠페인 경험</strong> 강화</div>
+            </div>
+          </div>
+        </div>
+        <!-- Next Step — Light theme -->
+        <div style="flex:0 0 42%;padding:.75vw 1.2vw;display:flex;flex-direction:column;min-height:0">
+          <div class="sec-lbl">
+            <div class="sec-num">5</div>
+            <div class="sec-txt">Next Step</div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:center;flex:1;gap:0;padding:0 .5vw">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:.3vw">
+              <div style="font-size:.55vw;font-weight:700;color:var(--g);letter-spacing:.09em;text-transform:uppercase;margin-bottom:.15vw">STEP 1</div>
+              <div style="width:2.2vw;height:2.2vw;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1vw">👥</div>
+              <div style="font-size:.65vw;font-weight:600;color:var(--tp);margin-top:.2vw;text-align:center">유관부서 협의</div>
+            </div>
+            <div style="flex:1;height:2px;background:rgba(5,177,105,.4);margin-bottom:1.8vw;max-width:3.5vw"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:.3vw">
+              <div style="font-size:.55vw;font-weight:700;color:var(--g);letter-spacing:.09em;text-transform:uppercase;margin-bottom:.15vw">STEP 2</div>
+              <div style="width:2.2vw;height:2.2vw;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1vw">📋</div>
+              <div style="font-size:.65vw;font-weight:600;color:var(--tp);margin-top:.2vw;text-align:center">세부운영안 확정<br><span style="font-size:.6vw;color:var(--ts)">(5월 후반/감사님보고)</span></div>
+            </div>
+            <div style="flex:1;height:2px;background:rgba(5,177,105,.4);margin-bottom:1.8vw;max-width:3.5vw"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:.3vw">
+              <div style="font-size:.55vw;font-weight:700;color:var(--g);letter-spacing:.09em;text-transform:uppercase;margin-bottom:.15vw">STEP 3</div>
+              <div style="width:2.2vw;height:2.2vw;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1vw">📅</div>
+              <div style="font-size:.65vw;font-weight:600;color:var(--tp);margin-top:.2vw;text-align:center">캠페인 운영<br><span class="mono" style="color:var(--g);font-size:.62vw">9월 예정</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 3 — 수집 의류 종류
+══════════════════════════════════════════ -->
+<div class="slide">
+  <div class="si">
+    <div class="shdr">
+      <div><div class="lbl">Collection Guide</div><div class="h1">수집 의류 종류</div></div>
+      <div class="num">03 / 07</div>
+    </div>
+    <div style="display:flex;gap:1.4vw;flex:1;min-height:0">
+      <div style="flex:1;background:#E6F6EF;border:1.5px solid var(--g);border-radius:.65vw;padding:1.2vw;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:.6vw;margin-bottom:.85vw">
+          <div style="width:1.9vw;height:1.9vw;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95vw;flex-shrink:0">✓</div>
+          <div class="h2" style="color:var(--g)">자원화 가능 의류</div>
+        </div>
+        <ul class="bul" style="gap:.45vw;margin-bottom:.85vw">
+          <li style="color:#036B42">티셔츠, 셔츠, 맨투맨, 후드류</li>
+          <li style="color:#036B42">데님류</li>
+          <li style="color:#036B42">유니폼</li>
+          <li style="color:#036B42">솜 충전재 의류</li>
+        </ul>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5vw;flex:1;min-height:0">
+          <div style="border-radius:.4vw;overflow:hidden;min-height:0;background:#fff;display:flex;align-items:center;justify-content:center">
+            <img src="Asset/Collection guide_good (1).png" alt="" style="width:100%;height:100%;object-fit:contain;display:block" onerror="this.parentElement.style.background='#cfe9da';this.style.display='none'">
+          </div>
+          <div style="border-radius:.4vw;overflow:hidden;min-height:0;background:#fff;display:flex;align-items:center;justify-content:center">
+            <img src="Asset/Collection guide_good (2).png" alt="" style="width:100%;height:100%;object-fit:contain;display:block" onerror="this.parentElement.style.background='#cfe9da';this.style.display='none'">
+          </div>
+          <div style="border-radius:.4vw;overflow:hidden;min-height:0;background:#fff;display:flex;align-items:center;justify-content:center">
+            <img src="Asset/Collection guide_good (3).png" alt="" style="width:100%;height:100%;object-fit:contain;display:block" onerror="this.parentElement.style.background='#cfe9da';this.style.display='none'">
+          </div>
+        </div>
+        <div style="padding-top:.7vw;border-top:1px solid rgba(5,177,105,.25);margin-top:.7vw">
+          <div class="sm" style="color:var(--g);font-style:italic">대부분의 섬유 의류는 자원화 가능합니다</div>
+        </div>
+      </div>
+      <div style="flex:1;background:#FDECEE;border:1.5px solid var(--r);border-radius:.65vw;padding:1.2vw;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:.6vw;margin-bottom:.85vw">
+          <div style="width:1.9vw;height:1.9vw;background:var(--r);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95vw;flex-shrink:0">✕</div>
+          <div class="h2" style="color:var(--r)">자원화 불가능 의류</div>
+        </div>
+        <ul class="bul rd" style="gap:.45vw;margin-bottom:.85vw">
+          <li style="color:#8C1320">피혁 (가죽, 모피)</li>
+          <li style="color:#8C1320">비닐 소재</li>
+          <li style="color:#8C1320">잡화류</li>
+          <li style="color:#8C1320">덕 / 구스다운 충전재 의류</li>
+        </ul>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5vw;flex:1;min-height:0">
+          <div style="border-radius:.4vw;overflow:hidden;min-height:0;background:#fff;display:flex;align-items:center;justify-content:center">
+            <img src="Asset/Collection guide_bad (1).png" alt="" style="width:100%;height:100%;object-fit:contain;display:block" onerror="this.parentElement.style.background='#f5cdd0';this.style.display='none'">
+          </div>
+          <div style="border-radius:.4vw;overflow:hidden;min-height:0;background:#fff;display:flex;align-items:center;justify-content:center">
+            <img src="Asset/Collection guide_bad (2).png" alt="" style="width:100%;height:100%;object-fit:contain;display:block" onerror="this.parentElement.style.background='#f5cdd0';this.style.display='none'">
+          </div>
+          <div style="border-radius:.4vw;overflow:hidden;min-height:0;background:#fff;display:flex;align-items:center;justify-content:center">
+            <img src="Asset/Collection guide_bad (3).png" alt="" style="width:100%;height:100%;object-fit:contain;display:block" onerror="this.parentElement.style.background='#f5cdd0';this.style.display='none'">
+          </div>
+        </div>
+        <div style="padding-top:.7vw;border-top:1px solid rgba(223,41,53,.2);margin-top:.7vw">
+          <div class="sm" style="color:var(--r)">불가 품목은 별도 박스에 분리 수거됩니다(기부단체와 연계 고려중)</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:.65vw;text-align:right"><span class="chip cw">※ 세진플러스 더블체크 진행 중</span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 4 — 운영 공간 구성
+     좌: 장소 사진 2장(롤오버) / 우: POP+DID
+══════════════════════════════════════════ -->
+<div class="slide">
+  <div class="si">
+    <div class="shdr">
+      <div><div class="lbl">Operations ①</div><div class="h1">캠페인 운영안 — 운영 공간 구성</div></div>
+      <div class="num">04 / 07</div>
+    </div>
+    <div style="display:flex;gap:1.4vw;flex:1;min-height:0">
+
+      <!-- 좌측: 장소 사진 2장 (33.6%) -->
+      <div style="flex:0 0 33.6%;display:flex;flex-direction:column;gap:.75vw;min-height:0">
+        <div style="flex:1;border-radius:.55vw;overflow:hidden;min-height:0;border:1px solid var(--bd);position:relative">
+          <img src="Asset/Location_ex1.jpg" alt="후보 1"
+            style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer"
+            onmouseover="this.src='Asset/Location_ex1_rollover.png'"
+            onmouseout="this.src='Asset/Location_ex1.jpg'">
+          <div style="position:absolute;top:0;left:0;right:0;background:linear-gradient(to bottom,rgba(5,70,35,.82) 0%,rgba(5,70,35,0) 100%);padding:.42vw .65vw .8vw;pointer-events:none">
+            <div style="font-size:.7vw;font-weight:700;color:#fff">3층 라운지 내 행사장소 후보 1번</div>
+          </div>
+        </div>
+        <div style="flex:1;border-radius:.55vw;overflow:hidden;min-height:0;border:1px solid var(--bd);position:relative">
+          <img src="Asset/Location_ex2.jpg" alt="후보 2"
+            style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer"
+            onmouseover="this.src='Asset/Location_ex2_rollover.png'"
+            onmouseout="this.src='Asset/Location_ex2.jpg'">
+          <div style="position:absolute;top:0;left:0;right:0;background:linear-gradient(to bottom,rgba(5,70,35,.82) 0%,rgba(5,70,35,0) 100%);padding:.42vw .65vw .8vw;pointer-events:none">
+            <div style="font-size:.7vw;font-weight:700;color:#fff">3층라운지 내 행사장소 후보 2번</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 우측: 이미지(상) + 내용(하) -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:.75vw;min-height:0">
+
+        <!-- 상단: POP 예시 이미지 + DID 예시 이미지 -->
+        <div style="display:flex;gap:.75vw;flex:1;min-height:0">
+          <div style="flex:1;border-radius:.5vw;overflow:hidden;border:1px solid var(--bd);background:#f8f8f8;display:flex;flex-direction:column;min-height:0">
+            <div style="background:#F3F4F6;padding:.3vw .75vw;flex-shrink:0">
+              <div style="font-size:.6vw;font-weight:700;color:var(--ts);letter-spacing:.07em;text-transform:uppercase">POP 예시</div>
+            </div>
+            <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:.3vw">
+              <img src="Asset/POP_ex.png" alt="POP 예시"
+                style="max-width:100%;max-height:100%;object-fit:contain;display:block"
+                onerror="this.parentElement.innerHTML='<div style=\'color:#aaa;font-size:.7vw\'>POP_ex.png</div>'">
+            </div>
+          </div>
+          <div style="flex:1;border-radius:.5vw;overflow:hidden;border:1px solid var(--bd);background:#f8f8f8;display:flex;flex-direction:column;min-height:0">
+            <div style="background:#F3F4F6;padding:.3vw .75vw;flex-shrink:0">
+              <div style="font-size:.6vw;font-weight:700;color:var(--ts);letter-spacing:.07em;text-transform:uppercase">DID 예시</div>
+            </div>
+            <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:.3vw">
+              <img src="Asset/DID_EX.png" alt="DID 예시"
+                style="max-width:100%;max-height:100%;object-fit:contain;display:block"
+                onerror="this.parentElement.innerHTML='<div style=\'color:#aaa;font-size:.7vw\'>DID_EX.png</div>'">
+            </div>
+          </div>
+        </div>
+
+        <!-- 하단: POP 내용 + DID 운영 -->
+        <div style="display:flex;gap:.75vw;flex:1;min-height:0">
+          <!-- POP 내용 -->
+          <div class="card" style="flex:1;display:flex;flex-direction:column;min-height:0;padding:.8vw 1vw">
+            <div style="display:flex;align-items:center;gap:.5vw;margin-bottom:.6vw;flex-shrink:0">
+              <span style="font-size:1vw">📋</span>
+              <div style="font-size:.82vw;font-weight:700">POP 내용</div>
+              <span class="chip cg" style="margin-left:.3vw;font-size:.58vw">총 3종</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:.5vw;flex:1;min-height:0">
+              <div style="flex:1;background:var(--bg);border-radius:.38vw;padding:.5vw .7vw;display:flex;flex-direction:column;justify-content:center">
+                <div class="chip cg" style="margin-bottom:.25vw;font-size:.58vw;align-self:flex-start">① 참여 안내문</div>
+                <div style="font-size:.72vw;color:var(--ts)">QR 포함 참여 프로세스 안내</div>
+              </div>
+              <div style="flex:1;background:var(--bg);border-radius:.38vw;padding:.5vw .7vw;display:flex;flex-direction:column;justify-content:center">
+                <div class="chip cg" style="margin-bottom:.25vw;font-size:.58vw;align-self:flex-start">② 자원순환 박스 안내</div>
+                <div style="font-size:.72vw;color:var(--ts)">수거 가능 품목 안내 포함</div>
+              </div>
+              <div style="flex:1;background:var(--bg);border-radius:.38vw;padding:.5vw .7vw;display:flex;flex-direction:column;justify-content:center">
+                <div class="chip cr" style="margin-bottom:.25vw;font-size:.58vw;align-self:flex-start">③ 불가 품목 박스</div>
+                <div style="font-size:.72vw;color:var(--ts)">컬러 스티커 / X 테이프 활용</div>
+              </div>
+            </div>
+          </div>
+          <!-- DID 운영 + 수거박스 -->
+          <div style="flex:1;display:flex;flex-direction:column;gap:.55vw;min-height:0">
+            <div class="card" style="flex:1;display:flex;flex-direction:column;padding:.8vw 1vw;min-height:0">
+              <div style="display:flex;align-items:center;gap:.5vw;margin-bottom:.55vw;flex-shrink:0">
+                <span style="font-size:1vw">🖥️</span>
+                <div style="font-size:.82vw;font-weight:700">DID 운영</div>
+                <span class="chip cg" style="margin-left:.3vw;font-size:.58vw">총 3대</span>
+              </div>
+              <table class="tbl" style="flex:1">
+                <thead><tr><th>위치</th><th>목적</th></tr></thead>
+                <tbody>
+                  <tr><td>행사장 앞</td><td>행사 진행 장소 안내</td></tr>
+                  <tr><td>라운지 입구</td><td>행사장 유입 유도</td></tr>
+                  <tr><td>1층 출입구</td><td>전체 임직원 대상 홍보</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card cgt" style="flex-shrink:0;padding:.6vw 1vw">
+              <div style="display:flex;align-items:center;gap:.5vw;margin-bottom:.45vw">
+                <span style="font-size:.95vw">📦</span>
+                <div style="font-size:.78vw;font-weight:700">의류 수거 박스</div>
+              </div>
+              <ul class="bul sm">
+                <li>카톤박스 2~3개 오픈 형태로 DP</li>
+                <li>포대 보관 여부 추가 검토 필요</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 5 — 임직원 참여 및 운영
+══════════════════════════════════════════ -->
+<div class="slide">
+  <div class="si">
+    <div class="shdr">
+      <div><div class="lbl">Operations ②</div><div class="h1">임직원 참여 및 운영</div></div>
+      <div class="num">05 / 07</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.75vw;flex:1;min-height:0">
+
+      <!-- TOP: 운영시간 바 (가운데 정렬) -->
+      <div style="flex-shrink:0;background:var(--g);border-radius:.52vw;padding:.5vw 1.5vw;display:flex;align-items:center;justify-content:center;gap:1.8vw">
+        <div style="display:flex;align-items:center;gap:.5vw">
+          <span style="font-size:1.1vw;color:#fff">🕐</span>
+          <div style="font-size:.68vw;font-weight:700;color:rgba(255,255,255,.75);letter-spacing:.08em;text-transform:uppercase">운영 시간</div>
+        </div>
+        <div class="mono" style="font-size:1.35vw;font-weight:700;color:#fff">13:00 – 17:00</div>
+        <div style="font-size:.72vw;color:rgba(255,255,255,.8)">매일 4시간 운영</div>
+        <div style="background:rgba(255,255,255,.22);border-radius:.3vw;padding:.22vw .7vw">
+          <div style="font-size:.67vw;font-weight:700;color:#fff">총 3일 운영</div>
+        </div>
+      </div>
+
+      <!-- 1단락: 방문자 동선 -->
+      <div style="flex:1.15;min-height:0;display:flex;flex-direction:column">
+        <div style="font-size:.82vw;font-weight:700;color:var(--tp);margin-bottom:.38vw">방문자 동선</div>
+        <div style="display:flex;gap:.7vw;flex:1;align-items:stretch;min-height:0">
+          <div class="card cgt" style="flex:1;display:flex;flex-direction:column;padding:.8vw 1vw">
+            <div style="display:flex;align-items:center;gap:.5vw;margin-bottom:.55vw">
+              <div class="sb" style="width:1.4vw;height:1.4vw;font-size:.67vw;flex-shrink:0">1</div>
+              <div style="font-size:.9vw;font-weight:700">정보 등록</div>
+            </div>
+            <div style="font-size:.63vw;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--neu);margin-bottom:.38vw">셀프 노트북 운영 &amp; 셀프 입력용 QR운영</div>
+            <ul class="bul sm">
+              <li>소속 팀 · 이름</li>
+              <li>기부 품목 종류</li>
+              <li>PCS 수량</li>
+            </ul>
+          </div>
+          <div class="fa" style="font-size:1.3vw;align-self:center">→</div>
+          <div class="card cgt" style="flex:1;display:flex;flex-direction:column;padding:.8vw 1vw">
+            <div style="display:flex;align-items:center;gap:.5vw;margin-bottom:.55vw">
+              <div class="sb" style="width:1.4vw;height:1.4vw;font-size:.67vw;flex-shrink:0">2</div>
+              <div style="font-size:.9vw;font-weight:700">의류 수거함</div>
+            </div>
+            <div style="font-size:.63vw;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--neu);margin-bottom:.38vw">스탭과 함께 수량 확인</div>
+            <ul class="bul sm">
+              <li>일반 의류 → <span style="color:var(--g);font-weight:600">자원순환 박스</span></li>
+              <li>불가 품목 → <span style="color:var(--r);font-weight:600">별도 박스 분리</span></li>
+            </ul>
+          </div>
+          <div class="fa" style="font-size:1.3vw;align-self:center">→</div>
+          <div class="card cgt" style="flex:1;display:flex;flex-direction:column;padding:.8vw 1vw">
+            <div style="display:flex;align-items:center;gap:.5vw;margin-bottom:.55vw">
+              <div class="sb" style="width:1.4vw;height:1.4vw;font-size:.67vw;flex-shrink:0">3</div>
+              <div style="font-size:.9vw;font-weight:700">참여 리워드</div>
+            </div>
+            <div style="font-size:.63vw;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--neu);margin-bottom:.38vw">참여 선물 제공</div>
+            <div style="margin-top:auto">
+              <div class="chip cw" style="margin-bottom:.35vw">검토 필요</div>
+              <div style="font-size:.72vw;color:var(--ts)">참여 선물 제공 여부 및 내용 검토 중</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2단락: 상주 스텝 운영안 -->
+      <div style="flex:1;min-height:0;display:flex;flex-direction:column">
+        <div style="font-size:.82vw;font-weight:700;color:var(--tp);margin-bottom:.38vw">상주 스텝 운영안 (3일 기준)</div>
+        <div class="card" style="flex:1;min-height:0;padding:.7vw 1vw;overflow:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:15%">운영일</th>
+                <th>운영인원(커뮤니케이션팀)</th>
+                <th style="width:42%">비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-size:.63vw"><strong style="font-size:.63vw">1일차</strong></td>
+                <td style="font-size:.63vw">상주 2명 + 대기 1명</td>
+                <td><span style="font-size:.63vw;color:var(--ts)">종료 후 이동을 위해 총무팀 남직원 1~2명 지원 요청</span></td>
+              </tr>
+              <tr>
+                <td style="font-size:.63vw"><strong style="font-size:.63vw">2일차</strong></td>
+                <td style="font-size:.63vw">상주 2명 + 대기 1명</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td style="font-size:.63vw"><strong style="font-size:.63vw">3일차</strong></td>
+                <td style="font-size:.63vw">상주 2명 + 대기 1명</td>
+                <td><span style="font-size:.63vw;color:var(--ts)">종료 후 이동을 위해 총무팀 남직원 1~2명 지원 요청</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 풋: 수집된 의류 처리방안(좌) + 추가확인 필요사항(우) -->
+      <div style="flex-shrink:0;display:flex;gap:.75vw;align-items:stretch">
+        <!-- 수집된 의류 처리방안 -->
+        <div style="flex:1;border:1px solid var(--bd);border-radius:.45vw;padding:.55vw .9vw">
+          <div style="font-size:.63vw;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ts);margin-bottom:.38vw">수집된 의류 처리방안</div>
+          <div style="display:flex;align-items:center;gap:.5vw">
+            <div style="flex:1;background:var(--gl);border-radius:.38vw;padding:.42vw .65vw;text-align:center">
+              <div style="font-size:.78vw;font-weight:700;color:var(--gd)">🏢 사내 보관</div>
+              <div style="font-size:.65vw;color:var(--gd);margin-top:.12vw">행사 종료 후 지하 공간 보관</div>
+            </div>
+            <div style="color:var(--g);font-size:.95vw;flex-shrink:0">→</div>
+            <div style="flex:1;background:var(--bg);border:1px solid var(--bd);border-radius:.38vw;padding:.42vw .65vw;text-align:center">
+              <div style="font-size:.78vw;font-weight:700;color:var(--tp)">🚚 물류 이동</div>
+              <div style="font-size:.65vw;color:var(--ts);margin-top:.12vw">이천 배송 차량 수배 필요</div>
+            </div>
+            <div style="color:var(--g);font-size:.95vw;flex-shrink:0">→</div>
+            <div style="flex:1;background:var(--bg);border:1px solid var(--bd);border-radius:.38vw;padding:.42vw .65vw;text-align:center">
+              <div style="font-size:.78vw;font-weight:700;color:var(--tp)">📆 후처리</div>
+              <div style="font-size:.65vw;color:var(--ts);margin-top:.12vw">연말 불용 처리 시 함께 처리</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 6 — 부서별 R&R 및 협의사항
+══════════════════════════════════════════ -->
+<div class="slide">
+  <div class="si">
+    <div class="shdr">
+      <div><div class="lbl">Roles &amp; Discussion Points</div><div class="h1">부서별 R&amp;R 및 협의사항</div></div>
+      <div class="num">06 / 07</div>
+    </div>
+    <div style="display:flex;flex-direction:column;flex:1;min-height:0;gap:.7vw">
+
+      <!-- R&R 카드 3개 -->
+      <div style="display:flex;gap:1.1vw;flex:0.7;min-height:0">
+        <!-- 커뮤니케이션팀 -->
+        <div class="card cgt" style="flex:1;display:flex;flex-direction:column;padding:.75vw 1vw">
+          <div style="font-size:1.05vw;font-weight:700;line-height:1.3;margin-bottom:.18vw">커뮤니케이션팀</div>
+          <span class="chip cg" style="margin-bottom:.55vw;align-self:flex-start;font-size:.6vw">전체 총괄 운영 기획</span>
+          <div style="font-size:.65vw;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--neu);margin-bottom:.35vw">Role</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.28vw">
+            <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.75vw;line-height:1.45;color:var(--tp)"><span style="width:.32vw;height:.32vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.4vw;display:block"></span>캠페인 기획 및 운영 총괄</li>
+            <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.75vw;line-height:1.45;color:var(--tp)"><span style="width:.32vw;height:.32vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.4vw;display:block"></span>유관부서 커뮤니케이션 및 일정 관리</li>
+            <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.75vw;line-height:1.45;color:var(--tp)"><span style="width:.32vw;height:.32vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.4vw;display:block"></span>캠페인 홍보 전략 수립 및 실행</li>
+          </ul>
+        </div>
+        <!-- 총무팀 -->
+        <div class="card cgt" style="flex:1;display:flex;flex-direction:column;padding:.75vw 1vw">
+          <div style="font-size:1.05vw;font-weight:700;line-height:1.3;margin-bottom:.18vw">총무팀</div>
+          <span class="chip cg" style="margin-bottom:.55vw;align-self:flex-start;font-size:.6vw">시설 운영 관련</span>
+          <div style="font-size:.65vw;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--neu);margin-bottom:.35vw">Role</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.28vw">
+            <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.75vw;line-height:1.45;color:var(--tp)"><span style="width:.32vw;height:.32vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.4vw;display:block"></span>장소 사용 허가</li>
+            <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.75vw;line-height:1.45;color:var(--tp)"><span style="width:.32vw;height:.32vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.4vw;display:block"></span>물류 이동 인력 지원</li>
+            <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.75vw;line-height:1.45;color:var(--tp)"><span style="width:.32vw;height:.32vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.4vw;display:block"></span>DID, POP 등 캠페인 집기 지원</li>
+          </ul>
+        </div>
+        <!-- 로지스틱스 -->
+        <div class="card cgt" style="flex:1;display:flex;flex-direction:column;padding:.75vw 1vw">
+          <div style="font-size:1.05vw;font-weight:700;line-height:1.3;margin-bottom:.18vw">로지스틱스</div>
+          <span class="chip cg" style="margin-bottom:.55vw;align-self:flex-start;font-size:.6vw">의류 운반 및 보관 관련</span>
+          <div style="font-size:.65vw;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--neu);margin-bottom:.35vw">Role</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.28vw">
+            <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.75vw;line-height:1.45;color:var(--tp)"><span style="width:.32vw;height:.32vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.4vw;display:block"></span>캠페인 후 수집 의류 배송</li>
+            <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.75vw;line-height:1.45;color:var(--tp)"><span style="width:.32vw;height:.32vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.4vw;display:block"></span>의류 보관 관리</li>
+            <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.75vw;line-height:1.45;color:var(--tp)"><span style="width:.32vw;height:.32vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.4vw;display:block"></span>연말 처리 및 운반</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 협의 필요사항 테이블 -->
+      <div style="flex:1.8;min-height:0;overflow:hidden">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:15%;font-size:.68vw">구분</th>
+              <th style="font-size:.68vw">협의 내용</th>
+              <th style="width:17%;font-size:.68vw">담당 부서</th>
+              <th style="width:16%">비고</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;font-size:.68vw">일정 / 운영</td>
+              <td style="font-size:.68vw">캠페인 진행 시점 확정</td>
+              <td style="font-size:.68vw">커뮤니케이션팀</td>
+              <td><span class="chip cn" style="font-size:.6vw">예상: 9월 추석명절 직후</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;font-size:.68vw">공간</td>
+              <td style="font-size:.68vw">
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:.28vw">
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>1안 : 3층 라운지 내 구석 장소</li>
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>2안 : 택배실 인근 주차장 구석 장소</li>
+                </ul>
+              </td>
+              <td style="font-size:.68vw">총무팀</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;font-size:.68vw">수거 · 보관</td>
+              <td style="font-size:.68vw">
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:.28vw">
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>수거 박스 보관 방식 (포대 여부)</li>
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>예상 물량 산정 기준</li>
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>박스당 평균 무게 측정 여부</li>
+                </ul>
+              </td>
+              <td style="font-size:.68vw">총무팀 / 로지스틱스</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;font-size:.68vw">물류</td>
+              <td style="font-size:.68vw">
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:.28vw">
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>이천 배송 차량 수배</li>
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>운반 방식 및 연말 처리 프로세스</li>
+                </ul>
+              </td>
+              <td style="font-size:.68vw">로지스틱스</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;font-size:.68vw">참여 유도</td>
+              <td style="font-size:.68vw">참여 선물 제공 여부 및 종류</td>
+              <td style="font-size:.68vw">커뮤니케이션팀</td>
+              <td><span class="chip cw" style="font-size:.6vw">검토 필요</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;font-size:.68vw">수집 품목</td>
+              <td style="font-size:.68vw">
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:.28vw">
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>자원화 가능/불가 품목 최종 확정</li>
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>세진플러스 더블체크 결과 반영</li>
+                </ul>
+              </td>
+              <td style="font-size:.68vw">커뮤니케이션팀</td>
+              <td><span class="chip cw" style="font-size:.6vw">진행 중</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;font-size:.68vw">집기</td>
+              <td style="font-size:.68vw">
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:.28vw">
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>POP / DID 집기 보유 수량 확인</li>
+                  <li style="display:flex;align-items:flex-start;gap:.4vw;font-size:.68vw;line-height:1.45;color:var(--tp)"><span style="width:.35vw;height:.35vw;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:.42vw;display:block"></span>불가 품목 박스 컬러 스티커 또는 X 테이프 활용 여부</li>
+                </ul>
+              </td>
+              <td style="font-size:.68vw">총무팀</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 7 — CLOSING
+══════════════════════════════════════════ -->
+<div class="slide dark">
+  <div class="s13-glow"></div>
+  <div class="s13-line"></div>
+  <div style="position:absolute;top:4.5%;left:4.5%;font-size:1.05vw;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.12em">F&amp;F</div>
+  <div style="position:absolute;top:4.5%;right:4.5%;font-size:.6vw;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)">07 / 07</div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5%;text-align:center">
+    <div class="dp" style="color:#fff;margin-bottom:1.2vw;font-size:2.95vw">옷장은 비우고, 마음은 채우고.</div>
+    <div class="h3" style="color:rgba(255,255,255,.55);font-weight:400;max-width:55%;line-height:1.8;margin-bottom:3.5vw">
+      임직원이 함께 만들어가는 작은 실천이,<br>더 큰 순환을 만듭니다.
+    </div>
+    <div style="display:flex;align-items:center;gap:.5vw">
+      <div style="width:.45vw;height:.45vw;border-radius:50%;background:var(--g)"></div>
+      <div style="width:.45vw;height:.45vw;border-radius:50%;background:var(--g)"></div>
+      <div style="width:.45vw;height:.45vw;border-radius:50%;background:var(--g)"></div>
+    </div>
+    <div class="cap" style="color:rgba(255,255,255,.3);margin-top:1.2vw">커뮤니케이션팀</div>
+  </div>
+</div>
+
+<!-- ══ NAV ══ -->
+<div class="nav" id="nav"></div>
+<div class="nc" id="nc">1 / 7</div>
+<div class="na">
+  <button class="nb" onclick="go(cur-1)" title="이전 (←)">&#8592;</button>
+  <button class="nb" onclick="go(cur+1)" title="다음 (→)">&#8594;</button>
+</div>
+
+</div>
+<script>
+const slides = document.querySelectorAll('.slide');
+const navEl  = document.getElementById('nav');
+const ncEl   = document.getElementById('nc');
+let cur = 0;
+slides.forEach((_,i) => {
+  const d = document.createElement('button');
+  d.className = 'nd' + (i===0?' on':'');
+  d.onclick = () => go(i);
+  navEl.appendChild(d);
+});
+function go(n) {
+  n = Math.max(0, Math.min(n, slides.length-1));
+  slides[cur].classList.remove('active');
+  navEl.children[cur].classList.remove('on');
+  cur = n;
+  slides[cur].classList.add('active');
+  navEl.children[cur].classList.add('on');
+  ncEl.textContent = (cur+1) + ' / ' + slides.length;
+}
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight'||e.key===' ')        { e.preventDefault(); go(cur+1); }
+  if(e.key==='ArrowLeft'||e.key==='Backspace') { e.preventDefault(); go(cur-1); }
+});
+let tx=0;
+document.querySelector('.stage').addEventListener('touchstart', e=>{ tx=e.touches[0].clientX; },{passive:true});
+document.querySelector('.stage').addEventListener('touchend',   e=>{
+  const dx = e.changedTouches[0].clientX - tx;
+  if(Math.abs(dx)>40) go(dx<0 ? cur+1 : cur-1);
+},{passive:true});
+</script>
+</body>
+</html>
